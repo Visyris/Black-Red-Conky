@@ -1,0 +1,122 @@
+#==============================================================================
+#                               Visyris Build
+# Date    : 2017-11-24
+# Author  : Visyris
+# Version : v0.1
+# License : Distributed under the terms of GNU GPL version 2 or later
+# 
+# This version is a modification of conkyrc_lunatico wich is modification of conkyrc_orange
+# 
+# conkyrc_orange:    http://gnome-look.org/content/show.php?content=137503&forumpage=0
+# conkyrc_lunatico:  http://gnome-look.org/content/show.php?content=142884
+#==============================================================================
+
+background yes
+update_interval .5
+
+cpu_avg_samples 4
+net_avg_samples 4
+temperature_unit celsius
+
+double_buffer yes
+no_buffers yes
+text_buffer_size 2048
+
+gap_x 5
+gap_y 50
+minimum_size 300 900
+maximum_width 320
+
+own_window yes
+own_window_class Conky-semi
+own_window_type dock
+own_window_argb_visual yes
+own_window_argb_visual no
+own_window_transparent yes
+own_window_colour 000000
+own_window_argb_value 0
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+
+border_inner_margin 0
+border_outer_margin 0
+alignment tr
+
+draw_shades no
+draw_outline no
+draw_borders no
+draw_graph_borders no
+
+override_utf8_locale yes
+use_xft yes
+xftfont caviar dreams:size=10
+xftalpha 0.5
+uppercase no
+
+# Defining colors
+# Shades of Red
+color1 990000
+color2 cc0000
+color3 ff0000
+# Shades of Gray
+color4 A5A5A5
+color5 878787
+color6 696969
+# White
+color7 FFFFFF
+
+# Loading lua script for drawning rings
+lua_load .visyris.lua
+lua_draw_hook_post main
+
+## System information using conky capabilities
+
+# Header with base system info
+own_window_argb_value 0
+own_window_colour 000000
+
+TEXT
+
+
+${color3}${font weight:bold}MSI B250M Gaming Pro ${hr 2}
+${voffset -6}
+$alignc${font weight:normal}${color1}$uptime
+$alignc${color1}$kernel
+
+#CPU
+${font weight:bold}${color3}Intel i5-7500 ${hr 2}
+${voffset -15}
+${offset 120}${cpugraph 30,200 660000 ff0000 -t}
+${offset 120}${font weight:normal}${color1}CPU Clock $freq MHz
+
+#RAM and SWAP
+${font weight:bold}${color3}Team Group Delta RED ${hr 2}
+${offset 120}${voffset 14}${font weight:normal}${color1}RAM  $mem/$memmax
+${offset 120}${color1}DDR4 Clock 2400 MHz
+${offset 120}${color1}SWAP    $swap/$swapmax
+
+#GPU
+${font weight:bold}${color3}MSI GTX 1050 Gaming X 2G ${hr 2}
+${offset 120}${voffset 14}${font weight:normal}${color1}GPU Clock  ${nvidia gpufreq} MHz
+${offset 120}${font weight:normal}${color1}VRAM ${execi 5 nvidia-settings -q [gpu:0]/UsedDedicatedGPUMemory -t} MiB/1997 MiB
+${offset 120}${color1}GDDR5 Clock ${nvidia memfreq} MHz
+
+#SSD and HDD
+${font weight:bold}${color3}Storage ${hr 2}
+${offset 120}${diskiograph_write 30,200 660000 660000 100 -l}
+${offset 120}${voffset -49}${diskiograph_read 30,200 FF0000 FF0000 100 -l}
+${offset 120}${font weight:normal}${color1}SSD  ${fs_used /}/${fs_size /}
+${offset 120}${font weight:normal}${color1}HDD  ${fs_used /home/}/${fs_size /home/}
+
+#Ethernet
+${voffset -5}
+${font weight:bold}${color3}Local Area Network ${hr 2}
+${offset 120}${downspeedgraph enp0s31f6 30,200 660000 660000 100 -t -l}
+${offset 120}${voffset -49}${upspeedgraph enp0s31f6 30,200 FF0000 FF0000 100 -t -l}
+${offset 120}${color1}${font weight:normal}UP ${totalup enp0s31f6}
+${offset 120}${color1}${font weight:normal}DN ${totaldown enp0s31f6}
+#Spotify
+${voffset 10}${font weight:bold}${color3}Spotify ${hr 2}
+${voffset 5}$alignc${font weight:normal}${color2}${execi 3 dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'|egrep -A 1 "title"|egrep -v "title"|cut -b 44-|cut -d '"' -f 1|egrep -v ^$ }
+${voffset -5}$alignc${font weight:normal:size=8}${color1}${execi 3 dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'|egrep -A 2 "artist"|egrep -v "artist"|egrep -v "array"|cut -b 27-|cut -d '"' -f 1|egrep -v ^$ }
+$alignc${font weight:normal:size=8}${color1}${execi 3 dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'|egrep -A 1 "album"|egrep -v "album"|cut -b 44-|cut -d '"' -f 1|egrep -v ^$ }${color 57BEEB}
+
